@@ -10,13 +10,29 @@ beer_categories = {
     "Dark & Rich": ["Oester Stout", "Krab"]
 }
 
+# Add non-alcoholic drink categories
+non_alcoholic_categories = {
+    "Sodas": ["Cola", "Dr. Pepper"],
+    "Fruit Drinks": ["Appeltizer", "Nalu"],
+    "Tea": ["Ice Tea Peach"]
+}
+
 # Streamlit app layout
-st.title("Beer Tasting Presentation 🍺")
-st.write("Explore the beers categorized for your tasting experience.")
+st.title("Hack & Beers")
 
 # Prepare data for charts
 categories = list(beer_categories.keys())
 beer_counts = [len(beer_categories[category]) for category in categories]
+
+# Prepare data for non-alcoholic drinks chart
+non_alc_categories = list(non_alcoholic_categories.keys())
+non_alc_counts = [len(non_alcoholic_categories[category]) for category in non_alc_categories]
+
+# Create DataFrame for non-alcoholic drinks
+non_alc_df = pd.DataFrame({
+    'Category': non_alc_categories,
+    'Count': non_alc_counts
+})
 
 # Prepare data for charts
 df = pd.DataFrame({
@@ -29,6 +45,11 @@ st.subheader("Beer Categories Overview")
 fig = px.pie(df, values='Count', names='Category', title='Distribution of Beers by Category')
 st.plotly_chart(fig)
 
+# Add non-alcoholic drinks pie chart
+st.subheader("Non-Alcoholic Beverages Overview")
+non_alc_fig = px.pie(non_alc_df, values='Count', names='Category', title='Distribution of Non-Alcoholic Drinks by Category')
+st.plotly_chart(non_alc_fig)
+
 # Display beer list with improved formatting
 st.subheader("Beer List")
 for category, beers in beer_categories.items():
@@ -37,13 +58,13 @@ for category, beers in beer_categories.items():
         st.write(f"- {beer}")
     st.write("")  # Add spacing between categories
 
-# Dropdown selection for detailed view
-st.sidebar.header("Select a Beer")
-selected_category = st.sidebar.selectbox("Choose a category:", categories)
-selected_beer = st.sidebar.selectbox("Choose a beer:", beer_categories[selected_category])
-
-# Show selected beer details
-st.sidebar.write(f"You selected **{selected_beer}** from the '{selected_category}' category.")
+# Display non-alcoholic drink list
+st.subheader("Non-Alcoholic Drinks List")
+for category, drinks in non_alcoholic_categories.items():
+    st.write(f"### {category}")
+    for drink in drinks:
+        st.write(f"- {drink}")
+    st.write("")  # Add spacing between categories
 
 st.markdown("---")
 st.markdown("Enjoy your beer tasting session responsibly! 🍺")
